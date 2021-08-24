@@ -1,0 +1,97 @@
+##### Python Installation, version 3.7.3 #####
+
+yum groupinstall -y "development tools"
+
+yum install -y \
+  libffi-devel \
+  zlib-devel \
+  bzip2-devel \
+  openssl-devel \
+  ncurses-devel \
+  sqlite-devel \
+  readline-devel \
+  tk-devel \
+  gdbm-devel \
+  xz-devel \
+  expat-devel
+
+yum install -y wget
+  
+cd /usr/src
+
+wget https://www.python.org/ftp/python/3.7.3/Python-3.7.3.tgz
+
+tar xf Python-3.7.3.tgz
+
+cd Python-3.7.3
+
+./configure --enable-loadable-sqlite-extensions --enable-optimizations 
+
+make altinstall
+
+# Create virtual environment
+mkdir /opt/python-venvs
+cd /opt/python-venvs
+python3.7 -m venv ucd-project-3.7
+source ucd-project-3.7/bin/activate
+pip3.7 install --upgrade pip
+pip install -r pip-freeze-venv.txt
+
+###### Install and configure MongoDB #######
+# Add the repo
+cat << EOF > /etc/yum.repos.d/mongodb-org-4.0.repo
+[mongodb-org-4.0]
+name=MongoDB Repository
+baseurl=http://downloads-distro.mongodb.org/repo/redhat/os/x86_64/
+gpgcheck=0
+enabled=1
+gpgkey=https://www.mongodb.org/static/pgp/server-4.0.asc
+EOF
+
+# Install MongoDB
+yum install -y mongodb-org
+
+# Start the service
+service mongod start
+
+#Start the mongo shell and create username and password
+mongo
+
+use admin
+
+db.createUser(
+  {
+    user: "root",
+    pwd: "roots3creT",
+    roles: [ { role: "userAdminAnyDatabase", db: "admin" }, "readWriteAnyDatabase" ]
+  }
+)
+
+type exit
+
+####Configure Django#####
+source /opt/python-venvs/ucd-project-3.7/bin/activate
+mkdir /opt/project
+cd /opt/project/
+
+django-admin startproject campaign
+
+cd /opt/project/campaign/campaign
+
+# Update the below file to access the django server on different ips, by default it only allows 127.0.0.1
+vim campaign/settings.py
+#To allow all hosts
+ALLOWED_HOSTS = ['*']
+
+# settings.py
+In TEMPLATES setcion
+'DIRS': ['templates'],
+
+# Add the below to bottom of settings.py to serve CSS content
+STATICFILES_DIRS = (
+  os.path.join(BASE_DIR,'static'),
+)
+
+# Create a directory for templates
+cd /opt/project/campaign/campaign
+mkdir templates
