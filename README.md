@@ -4,10 +4,6 @@
   <strong> The environmental sentiment tool </strong>
 </div>
 
-<div align="center" >
-  <strong> Visit: www.sonrai.website </strong>
-</div>
-
 # Software versions used:
 ```
 Cloud: AWS Free Tier
@@ -19,8 +15,8 @@ vaderSentiment: 3.2.1
 Bokeh: 1.3.0
 ```
 # How to use this repo
-- Clone the repo: git clone https://github.com/ucd-nlmsc-teamproject/Sonrai-Repo.git
-- Switch to the Repo: **cd Sonrai-Repo**
+- Clone the repo: git clone https://github.com/danushM/Sonrai
+- Switch to the Repo: **cd Sonrai**
 ## Environment Configuration
 Finish the environment configuration by following the instructions **env_setup/env_setup.txt**. This includes 
 ```
